@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rescue Scanner — bad-app</title>
+<style>
+body{font-family:ui-monospace,Menlo,Consolas,monospace;margin:2rem auto;max-width:1100px;padding:0 1rem;color:#111;line-height:1.45}
+h1{font-size:1.4rem}table{border-collapse:collapse;width:100%;font-size:.85rem}
+td,th{border:1px solid #ddd;padding:.45rem .6rem;text-align:left;vertical-align:top}
+th{background:#f4f4f5}.sev{color:#fff;border-radius:3px;padding:.1rem .45rem;font-size:.75rem}
+pre{white-space:pre-wrap;margin:.2rem 0 .35rem;background:#f8f8f8;padding:.3rem .45rem;border-radius:4px}
+.fix{color:#374151;font-family:system-ui,sans-serif;font-size:.82rem}
+.title{color:#374151;font-family:system-ui,sans-serif}.conf{text-transform:capitalize}
+.meta{color:#52525b;font-family:system-ui,sans-serif}.limit{border:1px solid #f59e0b;background:#fffbeb;padding:.7rem 1rem;border-radius:6px;font-family:system-ui,sans-serif;font-size:.85rem}
+.rules{font-family:system-ui,sans-serif;font-size:.85rem}
+</style></head><body>
+<h1>Rescue Scanner report</h1>
+<p class="meta">repo <code>bad-app</code> · revision <code>n/a</code> ·
+scanned 2026-11-19T17:18:23.461Z · 7 files · 14 findings
+(<strong>5</strong> high / 5 medium / 4 low)</p>
+<div class="limit"><strong>Scope limit:</strong> static source review of this repository, ranked by
+heuristic rules. This is an engineering review, not a security certification or a penetration test —
+it can miss real defects and can flag safe code.</div>
+<table><thead><tr><th>severity</th><th>rule</th><th>location</th><th>confidence</th><th>evidence &amp; remediation</th></tr></thead>
+<tbody>
+<tr>
+  <td><span class="sev" style="background:#b91c1c">high</span></td>
+  <td><code>boundary-leak</code><div class="title">Server-only module imported into client code</div></td>
+  <td><code>components/PayButton.tsx:3</code></td>
+  <td class="conf">high</td>
+  <td><pre>import { readFileSync } from &quot;fs&quot;;</pre><div class="fix">Remove the server import (fs) from the client file; call a route handler or pass the data in from a server component instead.</div></td>
+</tr>
+<tr>
+  <td><span class="sev" style="background:#b91c1c">high</span></td>
+  <td><code>missing-rls</code><div class="title">Supabase table without row-level security</div></td>
+  <td><code>supabase/migrations/001_init.sql:1</code></td>
+  <td class="conf">medium</td>
+  <td><pre>create table orders (</pre><div class="fix">Add ALTER TABLE orders ENABLE ROW LEVEL SECURITY; plus a policy scoped to the owning user, e.g. USING (auth.uid() = user_id).</div></td>
+</tr>
+<tr>
+  <td><span class="sev" style="background:#b91c1c">high</span></td>
+  <td><code>missing-rls</code><div class="title">Supabase table without row-level security</div></td>
+  <td><code>supabase/migrations/001_init.sql:14</code></td>
+  <td class="conf">high</td>
+  <td><pre>create policy &quot;anyone&quot; on payments for all using (true);</pre><div class="fix">USING (true) grants the action to every role including anon. Replace with a user-scoped predicate such as USING (auth.uid() = user_id).</div></td>
+</tr>
+<tr>
+  <td><span class="sev" style="background:#b91c1c">high</span></td>
+  <td><code>server-secret-in-client</code><div class="title">Server secret reachable from client code</div></td>
+  <td><code>components/PayButton.tsx:6</code></td>
+  <td class="conf">high</td>
+  <td><pre>const key = process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY;</pre><div class="fix">Rename the env key to drop the NEXT_PUBLIC_ prefix (it is bundled to the browser): use a server-only name like SUPABASE_SERVICE_ROLE_KEY and read it in a route handler or server component.</div></td>
+</tr>
+<tr>
+  <td><span class="sev" style="background:#b91c1c">high</span></td>
+  <td><code>server-secret-in-client</code><div class="title">Server secret reachable from client code</div></td>
+  <td><code>components/PayButton.tsx:7</code></td>
+  <td class="conf">high</td>
+  <td><pre>const debug = process.env.SUPABASE_SERVICE_ROLE_KEY;</pre><div class="fix">Move the SUPABASE_SERVICE_ROLE_KEY access into a route handler or server component; anything read in a client file is shipped to every browser.</div></td>
+</tr>
+<tr>
+  <td><span class="sev" style="background:#b45309">medium</span></td>
+  <td><code>deploy-misconfig</code><div class="title">Hard-coded local URL or unsafe http endpoint</div></td>
+  <td><code>app/api/notify/route.ts:3</code></td>
+  <td class="conf">high</td>
+  <td><pre>const res = await fetch(&quot;http://localhost:4000/send&quot;, {</pre><div class="fix">Move &quot;http://localhost:4000/send&quot; into an env key (e.g. process.env.APP_BASE_URL) with .env.example documenting it; keep https for any remote endpoint.</div></td>
+</tr>
+<tr>
+  <td><span class="sev" style="background:#b45309">medium</span></td>
+  <td><code>deploy-misconfig</code><div class="title">Hard-coded local URL or unsafe http endpoint</div></td>
+  <td><code>lib/config.ts:1</code></td>
+  <td class="conf">high</td>
+  <td><pre>export const API_BASE = &quot;http://localhost:4000&quot;;</pre><div class="fix">Move &quot;http://localhost:4000&quot; into an env key (e.g. process.env.APP_BASE_URL) with .env.example documenting it; keep https for any remote endpoint.</div></td>
+</tr>
+<tr>
+  <td><span class="sev" style="background:#b45309">medium</span></td>
+  <td><code>missing-auth-check</code><div class="title">Protected route without a session check</div></td>
+  <td><code>app/dashboard/page.tsx:1</code></td>
+  <td class="conf">medium</td>
+  <td><pre>import { createClient } from &quot;@supabase/supabase-js&quot;;</pre><div class="fix">Check the session at the top of the handler/page or in the route-group layout: const { data: { session } } = await supabase.auth.getSession(); if (!session) redirect('/login').</div></td>
+</tr>
+<tr>
+  <td><span class="sev" style="background:#b45309">medium</span></td>
+  <td><code>unsafe-api-route</code><div class="title">Route handler consumes unvalidated input</div></td>
+  <td><code>app/api/notify/route.ts:2</code></td>
+  <td class="conf">medium</td>
+  <td><pre>const { email } = await request.json();</pre><div class="fix">Validate the body before use: const parsed = schema.safeParse(await request.json()); if (!parsed.success) return Response.json({ error: 'invalid input' }, { status: 400 });</div></td>
+</tr>
+<tr>
+  <td><span class="sev" style="background:#b45309">medium</span></td>
+  <td><code>unsafe-api-route</code><div class="title">Route handler consumes unvalidated input</div></td>
+  <td><code>app/api/pay/route.ts:4</code></td>
+  <td class="conf">medium</td>
+  <td><pre>const body = await request.json();</pre><div class="fix">Validate the body before use: const parsed = schema.safeParse(await request.json()); if (!parsed.success) return Response.json({ error: 'invalid input' }, { status: 400 });</div></td>
+</tr>
+<tr>
+  <td><span class="sev" style="background:#1d4ed8">low</span></td>
+  <td><code>env-misconfig</code><div class="title">Env key used in code missing from .env.example</div></td>
+  <td><code>components/PayButton.tsx:6</code></td>
+  <td class="conf">medium</td>
+  <td><pre>const key = process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY;</pre><div class="fix">Add NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY= to .env.example so a fresh clone knows the key is required.</div></td>
+</tr>
+<tr>
+  <td><span class="sev" style="background:#1d4ed8">low</span></td>
+  <td><code>env-misconfig</code><div class="title">Env key used in code missing from .env.example</div></td>
+  <td><code>lib/config.ts:2</code></td>
+  <td class="conf">medium</td>
+  <td><pre>export const WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET;</pre><div class="fix">Add STRIPE_WEBHOOK_SECRET= to .env.example so a fresh clone knows the key is required.</div></td>
+</tr>
+<tr>
+  <td><span class="sev" style="background:#1d4ed8">low</span></td>
+  <td><code>missing-test</code><div class="title">Critical flow with no test file</div></td>
+  <td><code>app/api/notify/route.ts:1</code></td>
+  <td class="conf">medium</td>
+  <td><pre>export async function POST(request: Request) {</pre><div class="fix">Add notify.test.ts exercising the handler's happy path and one rejection case (e.g. vitest: const res = await POST(new Request(...))).</div></td>
+</tr>
+<tr>
+  <td><span class="sev" style="background:#1d4ed8">low</span></td>
+  <td><code>missing-test</code><div class="title">Critical flow with no test file</div></td>
+  <td><code>app/api/pay/route.ts:1</code></td>
+  <td class="conf">medium</td>
+  <td><pre>import { createClient } from &quot;@supabase/supabase-js&quot;;</pre><div class="fix">Add pay.test.ts exercising the handler's happy path and one rejection case (e.g. vitest: const res = await POST(new Request(...))).</div></td>
+</tr>
+</tbody></table>
+<h2>Rules applied (8)</h2>
+<ul class="rules"><li><code>server-secret-in-client</code> — Server secret reachable from client code <em>(high/high)</em></li>
+<li><code>missing-rls</code> — Supabase table without row-level security <em>(high/medium)</em></li>
+<li><code>boundary-leak</code> — Server-only module imported into client code <em>(high/high)</em></li>
+<li><code>unsafe-api-route</code> — Route handler consumes unvalidated input <em>(medium/medium)</em></li>
+<li><code>missing-auth-check</code> — Protected route without a session check <em>(medium/medium)</em></li>
+<li><code>deploy-misconfig</code> — Hard-coded local URL or unsafe http endpoint <em>(medium/high)</em></li>
+<li><code>env-misconfig</code> — Env key used in code missing from .env.example <em>(low/medium)</em></li>
+<li><code>missing-test</code> — Critical flow with no test file <em>(low/medium)</em></li></ul>
+</body></html>

@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<!--
+  Evidence card template — 500x375 logical px (renders to 1000x750 at dsf=2).
+  Shows the system working: a real output, a diff, a trace. Replace the
+  {{PLACEHOLDER}}s; {{ARTIFACT}} is usually a <pre> of real output.
+-->
+<head>
+  <meta charset="utf-8" />
+  <style>
+    * { box-sizing: border-box; margin: 0; }
+    body {
+      width: 500px; height: 375px; padding: 28px;
+      background: #0b0f14; color: #e8edf2;
+      font: 15px/1.5 system-ui, -apple-system, sans-serif;
+      display: flex; flex-direction: column;
+    }
+    h1 { font-size: 1.15rem; margin-bottom: 4px; }
+    .what { color: #96a3b0; font-size: 0.85rem; margin-bottom: 14px; }
+    pre {
+      flex: 1; background: #11161d; border: 1px solid #26303b; border-radius: 8px;
+      padding: 14px; overflow: hidden;
+      font: 11.5px/1.5 ui-monospace, Consolas, monospace; white-space: pre-wrap;
+    }
+    footer {
+      border-top: 1px solid #26303b; padding-top: 10px; margin-top: 12px;
+      color: #e0b040; font-size: 0.72rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>{{TITLE}}</h1>
+  <p class="what">{{WHAT_IT_SHOWS}}</p>
+  <pre>{{ARTIFACT}}</pre>
+  <footer>Limit: {{LIMIT}}</footer>
+</body>
+</html>

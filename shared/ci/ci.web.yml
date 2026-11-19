@@ -1,0 +1,38 @@
+# ci.yml — web app template. Replace rescue-scanner; keep actions on version tags
+# (pin to SHAs before public release — P2 checklist item).
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install frontend
+        working-directory: frontend
+        run: npm ci
+
+      - name: Install backend
+        run: pip install -r backend/requirements.txt
+
+      - name: Playwright browsers
+        working-directory: frontend
+        run: npx playwright install --with-deps chromium
+
+      - name: Verify (typecheck, lint, unit, build, pytest, e2e)
+        run: python scripts/verify.py --ci

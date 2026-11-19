@@ -1,0 +1,21 @@
+{
+  "id": "2026-11-19-deploy-misconfig-env-backed-fp",
+  "repo": "rescue-scanner",
+  "registered": "2026-11-19",
+  "status": "open",
+  "severity": "medium",
+  "kind": "false-positive",
+  "symptom": "deploy-misconfig flags two legitimate patterns as hard-coded local URLs: (1) env-backed defaults like process.env.X ?? \"http://localhost:8000\" — the exact remediation the rule suggests; (2) test-tooling files (playwright.config.ts, e2e/*, capture scripts) where a localhost target is the point, not a defect.",
+  "evidence": "Scanning six real earlier repos produced 30+ deploy-misconfig hits, nearly all this pattern: entrega-clara app/web/next.config.ts `API_INTERNAL_BASE_URL ?? \"http://localhost:8000\"` (documented as intended design in that repo's AGENTS.md), evalforge frontend/src/lib/api.ts `NEXT_PUBLIC_API_URL || \"http://127.0.0.1:8200\"`, WCP apps/*/src/config.ts zod `.default(\"http://localhost:8000\")`, policydesk web/playwright.config.ts baseURL.",
+  "reproduce": [
+    "node scanner/bin.mjs scan ../../archive/portfolio-clones/entrega-clara --fail-on never",
+    "node scanner/bin.mjs scan ../../archive/portfolio-clones/evalforge --fail-on never"
+  ],
+  "failing_revision": null,
+  "fix_commit": null,
+  "regression_test": null,
+  "root_cause": "The rule flags every http(s) URL literal matching localhost/http without checking whether it is already behind an env lookup, and it scans test-tooling files it should skip.",
+  "bench_candidate": "yes",
+  "publishable": false,
+  "notes": "Found while scanning real repos for the case-study hunt — the scanner's own false positives are registered before fixing, per the issue-register rule."
+}

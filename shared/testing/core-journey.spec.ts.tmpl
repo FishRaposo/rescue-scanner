@@ -1,0 +1,15 @@
+// Core-journey spec — copy to tests/e2e/core-journey.spec.ts and adapt.
+// The journey is the one path a recruiter follows end to end.
+import { expect, test } from "@playwright/test";
+
+test("core journey completes without a console error", async ({ page }) => {
+  const errors: string[] = [];
+  page.on("console", (m) => m.type() === "error" && errors.push(m.text));
+  page.on("pageerror", (e) => errors.push(String(e)));
+
+  await page.goto("/");
+  // TODO: walk the repo's core journey — list → detail → the proof element.
+  await expect(page.locator("body")).not.toBeEmpty();
+
+  expect(errors).toEqual([]);
+});

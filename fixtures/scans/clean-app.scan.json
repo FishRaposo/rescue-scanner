@@ -1,0 +1,72 @@
+{
+  "tool": "rescue-scanner",
+  "version": "0.1.0",
+  "repo": "clean-app",
+  "revision": null,
+  "scannedAt": "2026-11-19T17:18:23.648Z",
+  "filesScanned": 8,
+  "rules": [
+    {
+      "id": "server-secret-in-client",
+      "title": "Server secret reachable from client code",
+      "severity": "high",
+      "confidence": "high",
+      "description": "A secret-shaped env key is either inlined into the client bundle via NEXT_PUBLIC_* or referenced inside a client component."
+    },
+    {
+      "id": "missing-rls",
+      "title": "Supabase table without row-level security",
+      "severity": "high",
+      "confidence": "medium",
+      "description": "A CREATE TABLE in a Supabase migration without ALTER TABLE ... ENABLE ROW LEVEL SECURITY, or a policy USING (true)."
+    },
+    {
+      "id": "boundary-leak",
+      "title": "Server-only module imported into client code",
+      "severity": "high",
+      "confidence": "high",
+      "description": "A client component imports a server-only module (fs, next/headers, a server lib, a DB client): the import either breaks the build or leaks server code into the bundle."
+    },
+    {
+      "id": "unsafe-api-route",
+      "title": "Route handler consumes unvalidated input",
+      "severity": "medium",
+      "confidence": "medium",
+      "description": "A POST/PUT/PATCH/DELETE route handler reads request.json()/formData() and uses it without a schema/validation call."
+    },
+    {
+      "id": "missing-auth-check",
+      "title": "Protected route without a session check",
+      "severity": "medium",
+      "confidence": "medium",
+      "description": "A page or route handler under a protected prefix (app/dashboard, app/admin, app/account, app/(protected)) with no session/user check in its file or a sibling layout."
+    },
+    {
+      "id": "deploy-misconfig",
+      "title": "Hard-coded local URL or unsafe http endpoint",
+      "severity": "medium",
+      "confidence": "high",
+      "description": "A committed source file hard-codes localhost/127.0.0.1 or an http:// URL that will break or leak in production."
+    },
+    {
+      "id": "env-misconfig",
+      "title": "Env key used in code missing from .env.example",
+      "severity": "low",
+      "confidence": "medium",
+      "description": "process.env.KEY referenced in source with no matching key in .env.example/.env.sample — a fresh deploy fails or silently skips config."
+    },
+    {
+      "id": "missing-test",
+      "title": "Critical flow with no test file",
+      "severity": "low",
+      "confidence": "medium",
+      "description": "Each route handler should have a test/spec file named after its directory (e.g. app/api/pay/route.ts ↔ pay.test.ts) somewhere in the repo."
+    }
+  ],
+  "counts": {
+    "high": 0,
+    "medium": 0,
+    "low": 0
+  },
+  "findings": []
+}

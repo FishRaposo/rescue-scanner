@@ -1,0 +1,43 @@
+/*
+ * Shared design tokens. One design language across the repos; only the
+ * `--color-accent` pair changes per piece. Consumed as a Tailwind 4 `@theme`
+ * plus raw CSS variables, so components can use `bg-accent` or var(--color-*).
+ */
+
+@theme {
+  --color-bg: #0b0f14;
+  --color-surface: #11161d;
+  --color-elev: #171e27;
+  --color-border: #26303b;
+  --color-text: #e8edf2;
+  --color-muted: #96a3b0;
+  --color-accent: #4f9cf9;
+  --color-accent-fg: #08121f;
+  --color-success: #3fbf7f;
+  --color-danger: #f4655f;
+  --color-warning: #e0b040;
+  --color-focus: #8ec2ff;
+
+  --radius-card: 10px;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+/* Visible focus for keyboard users on every interactive element. */
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

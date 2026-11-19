@@ -1,0 +1,11 @@
+// Deep-link spec — copy to tests/e2e/deep-link.spec.ts and set the path.
+// A shared URL to a detail screen must boot directly, under the basePath.
+import { expect, test } from "@playwright/test";
+
+test("deep link boots", async ({ page }) => {
+  // TODO: one real deep path, e.g. "/items/item-0001/".
+  const deepLink = "/";
+  const response = await page.goto(deepLink);
+  expect(response?.ok()).toBeTruthy();
+  await expect(page.locator("body")).not.toBeEmpty();
+});

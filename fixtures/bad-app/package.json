@@ -1,0 +1,5 @@
+{
+  "name": "bad-app",
+  "private": true,
+  "description": "Fixture: a generated Next.js/Supabase app carrying one defect per scanner rule. Test data only."
+}

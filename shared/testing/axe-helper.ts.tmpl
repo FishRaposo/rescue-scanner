@@ -1,0 +1,13 @@
+// Axe helper — copy to <repo>/tests/helpers/axe.ts (inside the repo's own
+// tree so @axe-core/playwright resolves from the repo's node_modules).
+import { AxeBuilder } from "@axe-core/playwright";
+import { expect, type Page } from "@playwright/test";
+
+/** Run axe on the current page; fail on any violation. */
+export async function expectNoA11yViolations(page: Page) {
+  const results = await new AxeBuilder({ page }).analyze();
+  const violations = results.violations.map(
+    (v) => `${v.id}: ${v.help} (${v.nodes.length} nodes)`,
+  );
+  expect(violations, `axe violations:\n${violations.join("\n")}`).toEqual([]);
+}

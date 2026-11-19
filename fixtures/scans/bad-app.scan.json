@@ -1,0 +1,227 @@
+{
+  "tool": "rescue-scanner",
+  "version": "0.1.0",
+  "repo": "bad-app",
+  "revision": null,
+  "scannedAt": "2026-11-19T17:18:23.290Z",
+  "filesScanned": 7,
+  "rules": [
+    {
+      "id": "server-secret-in-client",
+      "title": "Server secret reachable from client code",
+      "severity": "high",
+      "confidence": "high",
+      "description": "A secret-shaped env key is either inlined into the client bundle via NEXT_PUBLIC_* or referenced inside a client component."
+    },
+    {
+      "id": "missing-rls",
+      "title": "Supabase table without row-level security",
+      "severity": "high",
+      "confidence": "medium",
+      "description": "A CREATE TABLE in a Supabase migration without ALTER TABLE ... ENABLE ROW LEVEL SECURITY, or a policy USING (true)."
+    },
+    {
+      "id": "boundary-leak",
+      "title": "Server-only module imported into client code",
+      "severity": "high",
+      "confidence": "high",
+      "description": "A client component imports a server-only module (fs, next/headers, a server lib, a DB client): the import either breaks the build or leaks server code into the bundle."
+    },
+    {
+      "id": "unsafe-api-route",
+      "title": "Route handler consumes unvalidated input",
+      "severity": "medium",
+      "confidence": "medium",
+      "description": "A POST/PUT/PATCH/DELETE route handler reads request.json()/formData() and uses it without a schema/validation call."
+    },
+    {
+      "id": "missing-auth-check",
+      "title": "Protected route without a session check",
+      "severity": "medium",
+      "confidence": "medium",
+      "description": "A page or route handler under a protected prefix (app/dashboard, app/admin, app/account, app/(protected)) with no session/user check in its file or a sibling layout."
+    },
+    {
+      "id": "deploy-misconfig",
+      "title": "Hard-coded local URL or unsafe http endpoint",
+      "severity": "medium",
+      "confidence": "high",
+      "description": "A committed source file hard-codes localhost/127.0.0.1 or an http:// URL that will break or leak in production."
+    },
+    {
+      "id": "env-misconfig",
+      "title": "Env key used in code missing from .env.example",
+      "severity": "low",
+      "confidence": "medium",
+      "description": "process.env.KEY referenced in source with no matching key in .env.example/.env.sample — a fresh deploy fails or silently skips config."
+    },
+    {
+      "id": "missing-test",
+      "title": "Critical flow with no test file",
+      "severity": "low",
+      "confidence": "medium",
+      "description": "Each route handler should have a test/spec file named after its directory (e.g. app/api/pay/route.ts ↔ pay.test.ts) somewhere in the repo."
+    }
+  ],
+  "counts": {
+    "high": 5,
+    "medium": 5,
+    "low": 4
+  },
+  "findings": [
+    {
+      "id": "boundary-leak:components/PayButton.tsx:3",
+      "ruleId": "boundary-leak",
+      "title": "Server-only module imported into client code",
+      "severity": "high",
+      "confidence": "high",
+      "path": "components/PayButton.tsx",
+      "line": 3,
+      "evidence": "import { readFileSync } from \"fs\";",
+      "remediation": "Remove the server import (fs) from the client file; call a route handler or pass the data in from a server component instead."
+    },
+    {
+      "id": "missing-rls:supabase/migrations/001_init.sql:1",
+      "ruleId": "missing-rls",
+      "title": "Supabase table without row-level security",
+      "severity": "high",
+      "confidence": "medium",
+      "path": "supabase/migrations/001_init.sql",
+      "line": 1,
+      "evidence": "create table orders (",
+      "remediation": "Add ALTER TABLE orders ENABLE ROW LEVEL SECURITY; plus a policy scoped to the owning user, e.g. USING (auth.uid() = user_id)."
+    },
+    {
+      "id": "missing-rls:supabase/migrations/001_init.sql:14",
+      "ruleId": "missing-rls",
+      "title": "Supabase table without row-level security",
+      "severity": "high",
+      "confidence": "high",
+      "path": "supabase/migrations/001_init.sql",
+      "line": 14,
+      "evidence": "create policy \"anyone\" on payments for all using (true);",
+      "remediation": "USING (true) grants the action to every role including anon. Replace with a user-scoped predicate such as USING (auth.uid() = user_id)."
+    },
+    {
+      "id": "server-secret-in-client:components/PayButton.tsx:6",
+      "ruleId": "server-secret-in-client",
+      "title": "Server secret reachable from client code",
+      "severity": "high",
+      "confidence": "high",
+      "path": "components/PayButton.tsx",
+      "line": 6,
+      "evidence": "const key = process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY;",
+      "remediation": "Rename the env key to drop the NEXT_PUBLIC_ prefix (it is bundled to the browser): use a server-only name like SUPABASE_SERVICE_ROLE_KEY and read it in a route handler or server component."
+    },
+    {
+      "id": "server-secret-in-client:components/PayButton.tsx:7",
+      "ruleId": "server-secret-in-client",
+      "title": "Server secret reachable from client code",
+      "severity": "high",
+      "confidence": "high",
+      "path": "components/PayButton.tsx",
+      "line": 7,
+      "evidence": "const debug = process.env.SUPABASE_SERVICE_ROLE_KEY;",
+      "remediation": "Move the SUPABASE_SERVICE_ROLE_KEY access into a route handler or server component; anything read in a client file is shipped to every browser."
+    },
+    {
+      "id": "deploy-misconfig:app/api/notify/route.ts:3",
+      "ruleId": "deploy-misconfig",
+      "title": "Hard-coded local URL or unsafe http endpoint",
+      "severity": "medium",
+      "confidence": "high",
+      "path": "app/api/notify/route.ts",
+      "line": 3,
+      "evidence": "const res = await fetch(\"http://localhost:4000/send\", {",
+      "remediation": "Move \"http://localhost:4000/send\" into an env key (e.g. process.env.APP_BASE_URL) with .env.example documenting it; keep https for any remote endpoint."
+    },
+    {
+      "id": "deploy-misconfig:lib/config.ts:1",
+      "ruleId": "deploy-misconfig",
+      "title": "Hard-coded local URL or unsafe http endpoint",
+      "severity": "medium",
+      "confidence": "high",
+      "path": "lib/config.ts",
+      "line": 1,
+      "evidence": "export const API_BASE = \"http://localhost:4000\";",
+      "remediation": "Move \"http://localhost:4000\" into an env key (e.g. process.env.APP_BASE_URL) with .env.example documenting it; keep https for any remote endpoint."
+    },
+    {
+      "id": "missing-auth-check:app/dashboard/page.tsx:1",
+      "ruleId": "missing-auth-check",
+      "title": "Protected route without a session check",
+      "severity": "medium",
+      "confidence": "medium",
+      "path": "app/dashboard/page.tsx",
+      "line": 1,
+      "evidence": "import { createClient } from \"@supabase/supabase-js\";",
+      "remediation": "Check the session at the top of the handler/page or in the route-group layout: const { data: { session } } = await supabase.auth.getSession(); if (!session) redirect('/login')."
+    },
+    {
+      "id": "unsafe-api-route:app/api/notify/route.ts:2",
+      "ruleId": "unsafe-api-route",
+      "title": "Route handler consumes unvalidated input",
+      "severity": "medium",
+      "confidence": "medium",
+      "path": "app/api/notify/route.ts",
+      "line": 2,
+      "evidence": "const { email } = await request.json();",
+      "remediation": "Validate the body before use: const parsed = schema.safeParse(await request.json()); if (!parsed.success) return Response.json({ error: 'invalid input' }, { status: 400 });"
+    },
+    {
+      "id": "unsafe-api-route:app/api/pay/route.ts:4",
+      "ruleId": "unsafe-api-route",
+      "title": "Route handler consumes unvalidated input",
+      "severity": "medium",
+      "confidence": "medium",
+      "path": "app/api/pay/route.ts",
+      "line": 4,
+      "evidence": "const body = await request.json();",
+      "remediation": "Validate the body before use: const parsed = schema.safeParse(await request.json()); if (!parsed.success) return Response.json({ error: 'invalid input' }, { status: 400 });"
+    },
+    {
+      "id": "env-misconfig:components/PayButton.tsx:6",
+      "ruleId": "env-misconfig",
+      "title": "Env key used in code missing from .env.example",
+      "severity": "low",
+      "confidence": "medium",
+      "path": "components/PayButton.tsx",
+      "line": 6,
+      "evidence": "const key = process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY;",
+      "remediation": "Add NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY= to .env.example so a fresh clone knows the key is required."
+    },
+    {
+      "id": "env-misconfig:lib/config.ts:2",
+      "ruleId": "env-misconfig",
+      "title": "Env key used in code missing from .env.example",
+      "severity": "low",
+      "confidence": "medium",
+      "path": "lib/config.ts",
+      "line": 2,
+      "evidence": "export const WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET;",
+      "remediation": "Add STRIPE_WEBHOOK_SECRET= to .env.example so a fresh clone knows the key is required."
+    },
+    {
+      "id": "missing-test:app/api/notify/route.ts:1",
+      "ruleId": "missing-test",
+      "title": "Critical flow with no test file",
+      "severity": "low",
+      "confidence": "medium",
+      "path": "app/api/notify/route.ts",
+      "line": 1,
+      "evidence": "export async function POST(request: Request) {",
+      "remediation": "Add notify.test.ts exercising the handler's happy path and one rejection case (e.g. vitest: const res = await POST(new Request(...)))."
+    },
+    {
+      "id": "missing-test:app/api/pay/route.ts:1",
+      "ruleId": "missing-test",
+      "title": "Critical flow with no test file",
+      "severity": "low",
+      "confidence": "medium",
+      "path": "app/api/pay/route.ts",
+      "line": 1,
+      "evidence": "import { createClient } from \"@supabase/supabase-js\";",
+      "remediation": "Add pay.test.ts exercising the handler's happy path and one rejection case (e.g. vitest: const res = await POST(new Request(...)))."
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<!--
+  Recorded-run page template for the CLI pieces (Deploy Doctor, Rescue
+  Scanner, Fix Bench). Replace every {{PLACEHOLDER}}. No JavaScript, no
+  off-origin assets — the page IS the demo.
+-->
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{TITLE}} — recorded run</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0b0f14; --surface: #11161d; --border: #26303b;
+      --text: #e8edf2; --muted: #96a3b0; --accent: #4f9cf9; --warn: #e0b040;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; background: var(--bg); color: var(--text);
+      font: 15px/1.6 system-ui, -apple-system, sans-serif;
+    }
+    main { max-width: 880px; margin: 0 auto; padding: 32px 20px 64px; }
+    h1 { font-size: 1.5rem; margin: 0 0 4px; }
+    .label {
+      display: inline-block; margin: 12px 0 20px; padding: 4px 12px;
+      border: 1px solid var(--warn); border-radius: 999px;
+      color: var(--warn); font-size: 0.8rem; font-weight: 600;
+    }
+    .meta { color: var(--muted); font-size: 0.85rem; }
+    section { margin-top: 28px; }
+    h2 { font-size: 1rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+    pre {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 16px; overflow-x: auto;
+      font: 13px/1.55 ui-monospace, Consolas, monospace; white-space: pre-wrap;
+    }
+    .cmd { color: var(--accent); }
+    footer { margin-top: 40px; color: var(--muted); font-size: 0.85rem; border-top: 1px solid var(--border); padding-top: 16px; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>{{TITLE}}</h1>
+    <p class="meta">{{REPO_LINK}} · run on {{DATE}} · revision {{REV}}</p>
+    <span class="label" data-sample-label="true">{{LABEL}}</span>
+
+    <section>
+      <h2>Command</h2>
+      <pre><span class="cmd">$</span> {{COMMAND}}</pre>
+    </section>
+
+    <section>
+      <h2>Input</h2>
+      <pre>{{INPUT_NOTE}}</pre>
+    </section>
+
+    <section>
+      <h2>Output</h2>
+      <pre>{{OUTPUT}}</pre>
+    </section>
+
+    <footer>
+      {{LIMITS}}
+    </footer>
+  </main>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<!--
+  Cover card template — 500x375 logical px (renders to 1000x750 at dsf=2).
+  Replace {{TITLE}}, {{LINE}}, {{OFFER}}, {{LIMIT}}. The footer limit travels
+  with the image — keep it honest and specific.
+-->
+<head>
+  <meta charset="utf-8" />
+  <style>
+    * { box-sizing: border-box; margin: 0; }
+    body {
+      width: 500px; height: 375px; padding: 36px;
+      background: #0b0f14; color: #e8edf2;
+      font: 16px/1.5 system-ui, -apple-system, sans-serif;
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .offer { color: #96a3b0; font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; }
+    h1 { font-size: 2rem; line-height: 1.15; margin: 8px 0; }
+    .line { color: #96a3b0; font-size: 1rem; }
+    footer {
+      border-top: 1px solid #26303b; padding-top: 10px;
+      color: #e0b040; font-size: 0.72rem;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <p class="offer">{{OFFER}}</p>
+    <h1>{{TITLE}}</h1>
+    <p class="line">{{LINE}}</p>
+  </div>
+  <footer>Limit: {{LIMIT}}</footer>
+</body>
+</html>

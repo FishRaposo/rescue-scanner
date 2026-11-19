@@ -1,0 +1,25 @@
+# ci.yml — CLI template (Deploy Doctor / Rescue Scanner / Fix Bench).
+# Python-only CLIs run unit + fixture tests, then the CLI on committed
+# fixtures and assert the expected diagnosis. No services, no network.
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Unit and fixture tests
+        run: python -m unittest discover -s tests -v
+
+      - name: CLI on committed fixtures (expected diagnoses asserted inside)
+        run: python scripts/verify.py --ci

@@ -1,0 +1,12 @@
+{
+  "scenario": "example",
+  "version": 1,
+  "seed": 7,
+  "generated_at": "2026-01-01T00:00:00Z",
+  "entities": {
+    "items": [
+      { "id": "item-0001", "title": "First example item", "status": "open" },
+      { "id": "item-0002", "title": "Second example item", "status": "closed" }
+    ]
+  }
+}

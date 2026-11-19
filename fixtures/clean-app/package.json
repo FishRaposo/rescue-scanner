@@ -1,0 +1,5 @@
+{
+  "name": "clean-app",
+  "private": true,
+  "description": "Fixture: same layout as bad-app with every defect remediated. Test data only."
+}

@@ -1,0 +1,23 @@
+[project]
+name = "rescue-scanner"
+version = "0.1.0"
+description = "Rescue Scanner — portfolio piece of Fish Raposo"
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+testpaths = ["backend", "tests", "shared"]
+addopts = "-q"
+pythonpath = ["."]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "ASYNC", "RUF"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+mypy_path = ["."]
+exclude = "(node_modules|\\.venv|out|demo-out)"
