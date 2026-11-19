@@ -2,7 +2,7 @@
   "id": "2026-11-19-env-misconfig-commented-decls",
   "repo": "rescue-scanner",
   "registered": "2026-11-19",
-  "status": "open",
+  "status": "fixed",
   "severity": "low",
   "kind": "false-positive",
   "symptom": "env-misconfig keeps flagging env keys after they are documented in .env.example as commented optional declarations (# KEY=value). The declaration parser only counts uncommented KEY= lines, so documented optional keys report as undocumented.",
@@ -10,9 +10,9 @@
   "reproduce": [
     "node scanner/bin.mjs scan ../../archive/portfolio-clones/agenttrace --fail-on never  # after adding commented declarations to .env.example"
   ],
-  "failing_revision": null,
-  "fix_commit": null,
-  "regression_test": null,
+  "failing_revision": "e36f9a3",
+  "fix_commit": "eb91285",
+  "regression_test": "vitest: scanner/src/rules.test.ts (clean-app zero-findings gate + FP-class coverage checks)",
   "root_cause": "The .env.example parser anchors declarations with ^KEY= and skips # KEY= lines entirely; commented optional declarations are the conventional way to document non-required keys.",
   "bench_candidate": "yes",
   "publishable": false,
