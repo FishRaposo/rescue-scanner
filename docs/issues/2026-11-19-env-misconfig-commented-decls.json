@@ -1,20 +1,22 @@
 {
   "id": "2026-11-19-env-misconfig-commented-decls",
   "repo": "rescue-scanner",
-  "registered": "2026-11-19",
-  "status": "fixed",
-  "severity": "low",
-  "kind": "false-positive",
+  "title": "env-misconfig ignores commented optional declarations (# KEY=) in .env.example",
+  "kind": "bug",
+  "found_date": "2026-11-19",
+  "found_by": "agent",
   "symptom": "env-misconfig keeps flagging env keys after they are documented in .env.example as commented optional declarations (# KEY=value). The declaration parser only counts uncommented KEY= lines, so documented optional keys report as undocumented.",
-  "evidence": "After adding a commented Dashboard section to agenttrace .env.example (NEXT_PUBLIC_API_URL, NEXT_PUBLIC_DEMO_MODE, NEXT_STATIC_EXPORT, NEXT_BASE_PATH, NEXT_DIST_DIR), the same four env-misconfig findings still fire on dashboard/src/lib/api.ts:29,36, dashboard/src/components/PortfolioShell.tsx:120, dashboard/next.config.js:4,5.",
   "reproduce": [
     "node scanner/bin.mjs scan ../../archive/portfolio-clones/agenttrace --fail-on never  # after adding commented declarations to .env.example"
   ],
+  "expected": "Commented optional declarations (# KEY=value) count as documented; uncommented KEY= still counts too.",
   "failing_revision": "e36f9a3",
   "fix_commit": "eb91285",
   "regression_test": "vitest: scanner/src/rules.test.ts (clean-app zero-findings gate + FP-class coverage checks)",
-  "root_cause": "The .env.example parser anchors declarations with ^KEY= and skips # KEY= lines entirely; commented optional declarations are the conventional way to document non-required keys.",
+  "root_cause": "The declaration regex anchored on ^KEY= and skipped # KEY= lines, though commented declarations are the conventional way to document optional keys.",
+  "status": "fixed",
   "bench_candidate": "yes",
-  "publishable": false,
+  "bench_note": "One-character-class fix in the declaration regex; verified by the clean agenttrace re-scan.",
+  "publishable": true,
   "notes": "Discovered while fixing the real agenttrace defect this rule found (the case study). The agenttrace fix itself stays — commented optional keys are a legitimate documentation form."
 }

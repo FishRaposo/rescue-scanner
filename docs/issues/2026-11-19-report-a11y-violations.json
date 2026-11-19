@@ -1,21 +1,23 @@
 {
   "id": "2026-11-19-report-a11y-violations",
   "repo": "rescue-scanner",
-  "registered": "2026-11-19",
-  "status": "fixed",
-  "severity": "medium",
-  "kind": "defect",
+  "title": "Report UI fails axe: 21 color-contrast nodes and an empty table header",
+  "kind": "bug",
+  "found_date": "2026-11-19",
+  "found_by": "agent",
   "symptom": "The report UI fails axe in e2e: color-contrast on 21 nodes (light-mode Tailwind classes — text-blue-700 links, text-amber-800, amber-50 panel — placed on the shared dark theme where they drop below contrast ratio) and empty-table-header on the findings table's detail column (<th aria-label=... with no text content).",
-  "evidence": "npx playwright test core-journey.spec.ts → axe violations: 'color-contrast: Elements must meet minimum color contrast ratio thresholds (21 nodes)' and 'empty-table-header: Table header text should not be empty (1 nodes)'.",
   "reproduce": [
     "python scripts/build_demo.py",
     "npx playwright test"
   ],
+  "expected": "Zero axe violations on /, /findings/* and /rules/.",
   "failing_revision": "328af33",
   "fix_commit": "669d699",
   "regression_test": "playwright e2e: frontend/tests/e2e/core-journey.spec.ts axe checks on /, /findings/f-01/, /rules/",
-  "root_cause": "Report pages were styled with light-mode Tailwind palette classes instead of the shared token colors (--color-accent, --color-warning, --color-muted) designed for the dark theme; the trailing table header was left textless.",
+  "root_cause": "Report pages used light-mode palette classes instead of the shared token colors designed for the dark theme; the trailing table header was left textless.",
+  "status": "fixed",
   "bench_candidate": "yes",
-  "publishable": false,
+  "bench_note": "Style-only fix to token colors; e2e axe check is the regression gate.",
+  "publishable": true,
   "notes": "Found by the repo's own e2e axe gate on first run."
 }

@@ -1,21 +1,23 @@
 {
   "id": "2026-11-19-env-misconfig-test-infra-fp",
   "repo": "rescue-scanner",
-  "registered": "2026-11-19",
-  "status": "fixed",
-  "severity": "low",
-  "kind": "false-positive",
+  "title": "env-misconfig flags test-infra env keys as missing deploy requirements",
+  "kind": "bug",
+  "found_date": "2026-11-19",
+  "found_by": "agent",
   "symptom": "env-misconfig flags test-infrastructure env keys (playwright configs, e2e harnesses, capture scripts) as missing from .env.example. The rule's remediation — 'a fresh deploy fails' — does not apply to test-only keys that already carry ?? defaults.",
-  "evidence": "evalforge: EVALFORGE_TEST_PYTHON, EVALFORGE_LIVE_API_PORT, EVALFORGE_API_ONLY, EVALFORGE_USE_STATIC_BUILD, NEXT_DIST_DIR flagged from playwright.config/e2e files; policydesk: POLICYDESK_TEST_PYTHON, POLICYDESK_PREVIEW_URL flagged from playwright.server.config.ts and scripts/capture-proof.mjs.",
   "reproduce": [
     "node scanner/bin.mjs scan ../../archive/portfolio-clones/evalforge --fail-on never",
     "node scanner/bin.mjs scan ../../archive/portfolio-clones/policydesk --fail-on never"
   ],
+  "expected": "Test tooling (playwright/vite configs, e2e/) and scripts/tools/ dirs are skipped; product-code keys still flag.",
   "failing_revision": "e36f9a3",
   "fix_commit": "eb91285",
   "regression_test": "vitest: scanner/src/rules.test.ts (clean-app zero-findings gate + FP-class coverage checks)",
-  "root_cause": "The rule walks every source file without distinguishing product code from test tooling, and flags every undeclared key regardless of whether it already has a safe default.",
+  "root_cause": "checkRepo walked every source file without distinguishing product code from test/tooling paths.",
+  "status": "fixed",
   "bench_candidate": "yes",
-  "publishable": false,
+  "bench_note": "Scope fix in checkRepo plus test-tooling classification; same regression gate.",
+  "publishable": true,
   "notes": "Same discovery pass as deploy-misconfig-env-backed-fp. Genuine product-code keys (e.g. NEXT_PUBLIC_API_URL) must still be flagged."
 }
