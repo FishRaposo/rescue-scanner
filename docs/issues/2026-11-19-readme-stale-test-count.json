@@ -2,11 +2,13 @@
   "id": "2026-11-19-readme-stale-test-count",
   "repo": "rescue-scanner",
   "title": "README states 14 vitest tests; actual suite is 26",
-  "kind": "doc-drift",
+  "kind": "docs",
   "found_date": "2026-11-19",
-  "found_by": "review-a-fresh-clone-audit",
+  "found_by": "review",
   "symptom": "README quickstart says `python scripts/verify.py --e2e` runs '14 vitest tests'; `npm run unit` on a fresh clone runs 26.",
-  "reproduce": "cd rescue-scanner && npm ci && npm run unit  # Test Files 4 passed, Tests 26 passed; README.md line ~32 says 14",
+  "reproduce": [
+    "cd rescue-scanner && npm ci && npm run unit  # Tests 26 passed; README said 14"
+  ],
   "expected": "README count matches the suite, or the line names no count at all.",
   "failing_revision": "4553def",
   "fix_commit": "8a0c62b",
