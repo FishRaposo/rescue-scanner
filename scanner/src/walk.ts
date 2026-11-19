@@ -24,13 +24,18 @@ const SKIP_DIRS = new Set([
 const SOURCE_EXT = new Set([".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".sql"]);
 const MAX_FILE_BYTES = 512 * 1024;
 
+/** Test tooling beyond *.test.*: e2e dirs and test-runner configs. Their
+ *  localhost targets and env keys are the point, not defects. */
+const TEST_TOOL_PATH = /(^|\/)(e2e|__tests__)(\/|$)/;
+const TEST_TOOL_NAME = /^(playwright|vite|vitest|jest)[^/]*\.config\.[jt]sx?$|\.(test|spec)\.[tj]sx?$/;
+
 export function classify(pathInRepo: string, text: string): FileKind {
   const p = pathInRepo.replace(/\\/g, "/");
   const base = p.slice(p.lastIndexOf("/") + 1);
   if (/(^|\/)app\/api\/.+\/route\.(t|j)sx?$/.test(p) || /(^|\/)pages\/api\//.test(p)) return "route-handler";
   if (/\.sql$/.test(base) && /(^|\/)(supabase|migrations|db|database)\//.test(p)) return "sql-migration";
   if (/^\.env\.(example|sample|template)/.test(base)) return "env-example";
-  if (/(^|\/)__tests__\//.test(p) || /\.(test|spec)\.[tj]sx?$/.test(base)) return "test";
+  if (TEST_TOOL_PATH.test(p) || TEST_TOOL_NAME.test(base)) return "test";
   if (/^\s*["']use client["']/.test(text)) return "client-component";
   if (/(^|\/)app\//.test(p)) return "server-component";
   return SOURCE_EXT.has(path.extname(base)) ? "source" : "other";

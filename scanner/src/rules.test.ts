@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { scan } from "./scan.ts";
+import fs from "node:fs";
 import path from "node:path";
 
 const BAD = path.resolve("fixtures/bad-app");
@@ -55,5 +56,14 @@ describe("clean-app fixture (false-positive gate)", () => {
   });
   it("scanned the files (guard against empty-tree false clean)", () => {
     expect(clean.filesScanned).toBeGreaterThan(5);
+  });
+  it("covers the known FP classes (regression: env-backed/test-infra/docs-string)", () => {
+    // Each known-FP shape exists in the fixture; the zero-findings gate above
+    // proves none of them fires. Presence checks guard the fixture from
+    // drifting away from what it is meant to prove.
+    expect(fs.readFileSync(`${CLEAN}/lib/config.ts`, "utf-8")).toContain('?? "http://localhost:4000"');
+    expect(fs.readFileSync(`${CLEAN}/lib/docs-strings.ts`, "utf-8")).toContain("http://localhost:3000");
+    expect(fs.existsSync(`${CLEAN}/playwright.config.ts`)).toBe(true);
+    expect(fs.existsSync(`${CLEAN}/e2e/serve.mjs`)).toBe(true);
   });
 });

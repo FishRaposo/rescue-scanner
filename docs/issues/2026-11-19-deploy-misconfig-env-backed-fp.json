@@ -5,8 +5,8 @@
   "status": "open",
   "severity": "medium",
   "kind": "false-positive",
-  "symptom": "deploy-misconfig flags two legitimate patterns as hard-coded local URLs: (1) env-backed defaults like process.env.X ?? \"http://localhost:8000\" — the exact remediation the rule suggests; (2) test-tooling files (playwright.config.ts, e2e/*, capture scripts) where a localhost target is the point, not a defect.",
-  "evidence": "Scanning six real earlier repos produced 30+ deploy-misconfig hits, nearly all this pattern: entrega-clara app/web/next.config.ts `API_INTERNAL_BASE_URL ?? \"http://localhost:8000\"` (documented as intended design in that repo's AGENTS.md), evalforge frontend/src/lib/api.ts `NEXT_PUBLIC_API_URL || \"http://127.0.0.1:8200\"`, WCP apps/*/src/config.ts zod `.default(\"http://localhost:8000\")`, policydesk web/playwright.config.ts baseURL.",
+  "symptom": "deploy-misconfig flags several non-defect URL literals as hard-coded local URLs: (1) env-backed defaults like process.env.X ?? \"http://localhost:8000\" — the exact remediation the rule suggests; (2) test-tooling files (playwright.config.ts, e2e/*) where a localhost target is the point; (3) docs/snippet strings (a <pre> install block, an env-file example rendered in the UI); (4) `new URL(path, \"http://x\")` parse bases; (5) `http://${var}` template builders.",
+  "evidence": "Scanning six real earlier repos produced 30+ deploy-misconfig hits, nearly all non-defects: entrega-clara app/web/next.config.ts `API_INTERNAL_BASE_URL ?? \"http://localhost:8000\"` (documented as intended design), evalforge frontend/src/lib/api.ts `NEXT_PUBLIC_API_URL || \"http://127.0.0.1:8200\"`, WCP apps/*/src/config.ts zod `.default(\"http://localhost:8000\")`, policydesk web/playwright.config.ts baseURL, agenttrace dashboard demo-scenarios.ts `new URL(path, \"http://sample.local\")`, aria-agent frontend setup page docs string.",
   "reproduce": [
     "node scanner/bin.mjs scan ../../archive/portfolio-clones/entrega-clara --fail-on never",
     "node scanner/bin.mjs scan ../../archive/portfolio-clones/evalforge --fail-on never"

@@ -1,0 +1,20 @@
+{
+  "id": "2026-11-19-env-misconfig-commented-decls",
+  "repo": "rescue-scanner",
+  "registered": "2026-11-19",
+  "status": "open",
+  "severity": "low",
+  "kind": "false-positive",
+  "symptom": "env-misconfig keeps flagging env keys after they are documented in .env.example as commented optional declarations (# KEY=value). The declaration parser only counts uncommented KEY= lines, so documented optional keys report as undocumented.",
+  "evidence": "After adding a commented Dashboard section to agenttrace .env.example (NEXT_PUBLIC_API_URL, NEXT_PUBLIC_DEMO_MODE, NEXT_STATIC_EXPORT, NEXT_BASE_PATH, NEXT_DIST_DIR), the same four env-misconfig findings still fire on dashboard/src/lib/api.ts:29,36, dashboard/src/components/PortfolioShell.tsx:120, dashboard/next.config.js:4,5.",
+  "reproduce": [
+    "node scanner/bin.mjs scan ../../archive/portfolio-clones/agenttrace --fail-on never  # after adding commented declarations to .env.example"
+  ],
+  "failing_revision": null,
+  "fix_commit": null,
+  "regression_test": null,
+  "root_cause": "The .env.example parser anchors declarations with ^KEY= and skips # KEY= lines entirely; commented optional declarations are the conventional way to document non-required keys.",
+  "bench_candidate": "yes",
+  "publishable": false,
+  "notes": "Discovered while fixing the real agenttrace defect this rule found (the case study). The agenttrace fix itself stays — commented optional keys are a legitimate documentation form."
+}

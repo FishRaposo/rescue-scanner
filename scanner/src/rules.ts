@@ -4,6 +4,7 @@
  * documents what the rule cannot see.
  */
 import {
+  lineOf,
   matches,
   finding,
   type Finding,
@@ -198,6 +199,16 @@ export const deployMisconfig: Rule = {
     const out: Finding[] = [];
     for (const [off, m] of matches(file, /["'`](https?:\/\/[^"'`\s)]+)["'`]/g)) {
       const url = m[1]!;
+      const ln = file.text.slice(
+        file.lineStarts[lineOf(file, off) - 1],
+        file.lineStarts[lineOf(file, off)] ?? file.text.length,
+      );
+      // Not defects: env-backed defaults (`env ?? "http://…"`, zod
+      // `.default("…")`); a `new URL(path, base)` parse base; a URL template
+      // literal containing ${…}; or a literal inside a docs/snippet string
+      // (multi-line string carrying \n escapes, e.g. a <pre> install block).
+      if (/process\.env|environment\.|\.default\(|new\s+URL\s*\(/.test(ln)) continue;
+      if (url.includes("${") || ln.includes("\\n")) continue;
       if (LOCALHOST.test(url) || url.startsWith("http://")) {
         if (url.startsWith("http://") && !LOCALHOST.test(url) && /\.(w3\.org|jsonplaceholder|example\.com)/.test(url)) continue;
         out.push(finding(file, this, off, {
@@ -227,13 +238,17 @@ export const envMisconfig: Rule = {
     const declared = new Set<string>();
     if (envFile) {
       for (const line of envFile.text.split("\n")) {
-        const m = /^\s*(?:export\s+)?([A-Z0-9_]+)\s*=/.exec(line);
+        // Uncommented declarations and commented optional ones (# KEY=) both
+        // document the key to a fresh clone.
+        const m = /^\s*(?:#\s*)?(?:export\s+)?([A-Z0-9_]+)\s*=/.exec(line);
         if (m) declared.add(m[1]!);
       }
     }
     const seen = new Map<string, { file: SourceFile; off: number }>();
     for (const f of ctx.files) {
       if (f.kind === "test" || f.kind === "env-example") continue;
+      // Tooling dirs are not product code; their keys don't gate a deploy.
+      if (/(^|\/)(scripts|tools|bin)\//.test(f.path)) continue;
       for (const [off, m] of matches(f, /process\.env\.([A-Z0-9_]{3,})/g)) {
         const key = m[1]!;
         if (RUNTIME_ENV.has(key) || declared.has(key) || seen.has(key)) continue;
