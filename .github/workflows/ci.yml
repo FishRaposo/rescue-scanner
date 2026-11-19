@@ -1,5 +1,6 @@
-# ci.yml — web app template. Replace rescue-scanner; keep actions on version tags
-# (pin to SHAs before public release — P2 checklist item).
+# ci.yml — Rescue Scanner. npm deps live at the repo ROOT (scanner/ + frontend/
+# + shared/ share one lockfile); there is no backend/. Keep actions on version
+# tags (pin to SHAs before public release — P2 checklist item).
 name: ci
 
 on:
@@ -17,22 +18,16 @@ jobs:
         with:
           node-version: "24"
           cache: npm
-          cache-dependency-path: frontend/package-lock.json
 
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-      - name: Install frontend
-        working-directory: frontend
+      - name: Install
         run: npm ci
 
-      - name: Install backend
-        run: pip install -r backend/requirements.txt
-
       - name: Playwright browsers
-        working-directory: frontend
         run: npx playwright install --with-deps chromium
 
-      - name: Verify (typecheck, lint, unit, build, pytest, e2e)
-        run: python scripts/verify.py --ci
+      - name: Verify (typecheck, lint, unit, build, demo export, e2e)
+        run: python scripts/verify.py --ci --e2e

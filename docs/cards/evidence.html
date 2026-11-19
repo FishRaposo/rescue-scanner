@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <style>
+    * { box-sizing: border-box; margin: 0; }
+    body {
+      width: 500px; height: 375px; padding: 36px;
+      background: #0b0f14; color: #e8edf2;
+      font: 15px/1.5 system-ui, -apple-system, sans-serif;
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .offer { color: #96a3b0; font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; }
+    h1 { font-size: 1.35rem; line-height: 1.2; margin: 8px 0 14px; }
+    .row { display: flex; gap: 10px; align-items: baseline; margin: 7px 0; font-size: 0.88rem; }
+    .tag { color: #f4655f; font-size: 0.7rem; text-transform: uppercase; min-width: 3.4em; }
+    .tag.med { color: #e0b040; }
+    .tag.low { color: #4f9cf9; }
+    code { color: #8ec2ff; font-size: 0.8rem; }
+    .detail { color: #96a3b0; }
+    footer {
+      border-top: 1px solid #26303b; padding-top: 10px;
+      color: #96a3b0; font-size: 0.72rem;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <p class="offer">Real finding → real fix</p>
+    <h1>env-misconfig on agenttrace</h1>
+    <div class="row"><span class="tag low">low</span><span><code>dashboard/src/lib/api.ts:29</code><br/><span class="detail">NEXT_PUBLIC_API_URL used, absent from .env.example</span></span></div>
+    <div class="row"><span class="tag low">low</span><span><code>dashboard/next.config.js:4–5</code><br/><span class="detail">NEXT_STATIC_EXPORT, NEXT_BASE_PATH undocumented</span></span></div>
+    <div class="row"><span class="tag">fixed</span><span><code>agenttrace@be04ffe</code><br/><span class="detail">documented optional dashboard keys in .env.example — re-scan is clean</span></span></div>
+  </div>
+  <footer>Scanning the same six repos also found and fixed three false-positive classes in the scanner itself — all registered before the fix.</footer>
+</body>
+</html>

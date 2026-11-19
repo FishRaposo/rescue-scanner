@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <style>
+    * { box-sizing: border-box; margin: 0; }
+    body {
+      width: 500px; height: 375px; padding: 36px;
+      background: #0b0f14; color: #e8edf2;
+      font: 15px/1.5 system-ui, -apple-system, sans-serif;
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .offer { color: #96a3b0; font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; }
+    h1 { font-size: 1.35rem; line-height: 1.2; margin: 8px 0 12px; }
+    pre {
+      font: 11px/1.55 ui-monospace, Menlo, Consolas, monospace;
+      background: #11161d; border: 1px solid #26303b; border-radius: 8px;
+      padding: 14px; color: #96a3b0; overflow: hidden;
+    }
+    .hi { color: #f4655f; } .md { color: #e0b040; } .ok { color: #3fbf7f; }
+    footer {
+      border-top: 1px solid #26303b; padding-top: 10px;
+      color: #96a3b0; font-size: 0.72rem;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <p class="offer">The instrument</p>
+    <h1>scan → rank → evidence → patch</h1>
+<pre>$ npx rescue-scanner scan app/ --format html
+<span class="hi">[high]   missing-rls</span>            migrations/001.sql:1
+<span class="hi">[high]   server-secret-in-client</span>  components/Pay.tsx:6
+<span class="md">[medium] unsafe-api-route</span>        api/pay/route.ts:4
+<span class="md">[medium] deploy-misconfig</span>        lib/config.ts:1
+exit 2 · every hit names file, line,
+evidence and a safe patch</pre>
+  </div>
+  <footer>Eight typed rules · bad/clean fixture pair each · CI mode exits non-zero on high-severity findings.</footer>
+</body>
+</html>

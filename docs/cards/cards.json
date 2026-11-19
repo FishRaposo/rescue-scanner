@@ -1,0 +1,5 @@
+[
+  { "html": "cover.html", "out": "cover.png", "clip": [0, 0, 500, 375] },
+  { "html": "evidence.html", "out": "evidence.png", "clip": [0, 0, 500, 375] },
+  { "html": "instrument.html", "out": "instrument.png", "clip": [0, 0, 500, 375] }
+]

@@ -1,0 +1,21 @@
+{
+  "id": "2026-11-19-report-a11y-violations",
+  "repo": "rescue-scanner",
+  "registered": "2026-11-19",
+  "status": "open",
+  "severity": "medium",
+  "kind": "defect",
+  "symptom": "The report UI fails axe in e2e: color-contrast on 21 nodes (light-mode Tailwind classes — text-blue-700 links, text-amber-800, amber-50 panel — placed on the shared dark theme where they drop below contrast ratio) and empty-table-header on the findings table's detail column (<th aria-label=... with no text content).",
+  "evidence": "npx playwright test core-journey.spec.ts → axe violations: 'color-contrast: Elements must meet minimum color contrast ratio thresholds (21 nodes)' and 'empty-table-header: Table header text should not be empty (1 nodes)'.",
+  "reproduce": [
+    "python scripts/build_demo.py",
+    "npx playwright test"
+  ],
+  "failing_revision": null,
+  "fix_commit": null,
+  "regression_test": null,
+  "root_cause": "Report pages were styled with light-mode Tailwind palette classes instead of the shared token colors (--color-accent, --color-warning, --color-muted) designed for the dark theme; the trailing table header was left textless.",
+  "bench_candidate": "yes",
+  "publishable": false,
+  "notes": "Found by the repo's own e2e axe gate on first run."
+}

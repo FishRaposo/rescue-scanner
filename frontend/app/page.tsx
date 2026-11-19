@@ -4,9 +4,9 @@ import { api } from "../lib/api";
 import { slugFor, type Severity, type ScanReport } from "../lib/report";
 
 const SEV_STYLE: Record<Severity, string> = {
-  high: "bg-red-700 text-white",
-  medium: "bg-amber-600 text-white",
-  low: "bg-blue-700 text-white",
+  high: "bg-danger/15 text-danger border-danger/40",
+  medium: "bg-warning/15 text-warning border-warning/40",
+  low: "bg-accent/15 text-accent border-accent/40",
 };
 
 export default async function ReportHome() {
@@ -30,13 +30,13 @@ export default async function ReportHome() {
         {(["high", "medium", "low"] as const).map((s) => (
           <div key={s} className="rounded border px-4 py-3 text-center">
             <div className="text-2xl font-bold">{report.counts[s]}</div>
-            <div className={`mt-1 rounded px-2 py-0.5 text-xs uppercase ${SEV_STYLE[s]}`}>{s}</div>
+            <div className={`mt-1 inline-block rounded border px-2 py-0.5 text-xs uppercase ${SEV_STYLE[s]}`}>{s}</div>
           </div>
         ))}
       </section>
 
-      <div className="mb-6 rounded-md border border-amber-400 bg-amber-50 p-4 text-sm text-amber-950">
-        <strong>Scope limit:</strong> static source review ranked by heuristic
+      <div className="mb-6 rounded-md border border-warning/50 bg-elev p-4 text-sm text-text">
+        <strong className="text-warning">Scope limit:</strong> static source review ranked by heuristic
         rules. This is an engineering review, not a security certification or a
         penetration test — it can miss real defects and can flag safe code.
       </div>
@@ -48,14 +48,14 @@ export default async function ReportHome() {
             <th className="py-2 pr-3">rule</th>
             <th className="py-2 pr-3">location</th>
             <th className="py-2 pr-3">evidence</th>
-            <th className="py-2" aria-label="detail" />
+            <th className="py-2"><span className="sr-only">detail</span></th>
           </tr>
         </thead>
         <tbody>
           {report.findings.map((f, i) => (
             <tr key={f.id} className="border-b align-top">
               <td className="py-2 pr-3">
-                <span className={`rounded px-2 py-0.5 text-xs uppercase ${SEV_STYLE[f.severity]}`}>
+                <span className={`inline-block rounded border px-2 py-0.5 text-xs uppercase ${SEV_STYLE[f.severity]}`}>
                   {f.severity}
                 </span>
               </td>
@@ -75,7 +75,7 @@ export default async function ReportHome() {
                 <Link
                   prefetch={false}
                   href={`/findings/${slugFor(i)}/`}
-                  className="text-blue-700 underline"
+                  className="text-accent underline"
                 >
                   detail
                 </Link>
@@ -86,7 +86,7 @@ export default async function ReportHome() {
       </table>
 
       <nav className="mt-8 text-sm">
-        <Link prefetch={false} href="/rules/" className="text-blue-700 underline">
+        <Link prefetch={false} href="/rules/" className="text-accent underline">
           Rules applied and what each cannot see →
         </Link>
       </nav>

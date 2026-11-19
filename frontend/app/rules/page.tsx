@@ -7,7 +7,7 @@ export default async function RulesPage() {
   return (
     <main className="mx-auto max-w-3xl px-6 py-10">
       <p className="text-sm">
-        <Link prefetch={false} href="/" className="text-blue-700 underline">
+        <Link prefetch={false} href="/" className="text-accent underline">
           ← report
         </Link>
       </p>
@@ -19,7 +19,7 @@ export default async function RulesPage() {
       </p>
       <ul className="mt-6 space-y-6">
         {report.rules.map((r) => (
-          <li key={r.id} className="rounded border p-4">
+          <li key={r.id} className="rounded border border-border bg-surface p-4">
             <div className="flex flex-wrap items-center gap-2">
               <code className="font-semibold">{r.id}</code>
               <span className="text-xs uppercase text-muted">
@@ -27,7 +27,7 @@ export default async function RulesPage() {
               </span>
             </div>
             <p className="mt-2 text-sm">{r.description}</p>
-            <p className="mt-2 text-sm text-amber-800">
+            <p className="mt-2 text-sm text-warning">
               <strong>Cannot see:</strong> {RULE_LIMITS[r.id]}
             </p>
           </li>

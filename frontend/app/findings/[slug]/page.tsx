@@ -65,7 +65,7 @@ export default async function FindingDetail({ params }: { params: Promise<{ slug
   return (
       <main className="mx-auto max-w-3xl px-6 py-10">
         <p className="text-sm">
-          <Link prefetch={false} href="/" className="text-blue-700 underline">
+          <Link prefetch={false} href="/" className="text-accent underline">
             ← all findings
           </Link>
         </p>
@@ -96,8 +96,8 @@ export default async function FindingDetail({ params }: { params: Promise<{ slug
             <CodeBlock>{PATCHES[f.ruleId]}</CodeBlock>
           </>
         ) : null}
-        <div className="mt-6 rounded-md border border-amber-400 bg-amber-50 p-4 text-sm text-amber-950">
-          <strong>What this rule cannot see:</strong>{" "}
+        <div className="mt-6 rounded-md border border-warning/50 bg-elev p-4 text-sm text-text">
+          <strong className="text-warning">What this rule cannot see:</strong>{" "}
           {RULE_LIMITS[f.ruleId] ?? "Heuristic rule; verify against the real code before acting."}
         </div>
       </main>

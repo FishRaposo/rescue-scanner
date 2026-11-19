@@ -47,4 +47,14 @@ The hub collects these files into its central register with `python scripts/coll
 
 ## Commands
 
-Nothing is built yet. When the launcher and the verification command exist, list them here exactly as the README gives them: install, run, verify.
+```sh
+npm ci                                   # install (deps live at repo root)
+node scanner/bin.mjs scan <path>         # scan a repo; --format text|json|html, --out, --fail-on
+npm run scan -- fixtures/bad-app         # 14 findings, exit 2
+npm run dev                              # report dev server (fixture data)
+python scripts/build_demo.py             # static export → site/
+python scripts/cards.py                  # render docs/cards → docs/images/portfolio (3×1000×750)
+python scripts/verify.py --e2e           # typecheck + lint + unit + build + demo export + e2e
+```
+
+Update the "planned 2026-11-17" line in the header when v0.1.0 lands.
