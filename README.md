@@ -4,6 +4,8 @@ Static audit for AI-generated Next.js/Supabase repos. Eight evidence-backed rule
 
 **Source only:** it reads repository source. It never probes, scans or sends requests to a live deployed app, and it is an engineering review — not a security certification or a penetration test.
 
+![Rescue Scanner — static report over a bundled fixture scan](docs/images/portfolio/cover.png)
+
 ## 30 seconds
 
 The static report demo (bundled fixture scan): `site/` after `python scripts/build_demo.py`, or the live Pages export once Fish publishes it. Deep links like `/findings/f-03/` boot offline.
@@ -29,7 +31,7 @@ Node 24+ and npm only — the CLI runs its TypeScript sources directly, no build
 - `docs/CASE_STUDY.md` — a real defect the scanner found in the owner's public `agenttrace` repo, the fix commit, and the false positives the same scan exposed in the scanner itself.
 - `scanner/src/` — ~600 lines: `types.ts`, `walk.ts`, `rules.ts`, `scan.ts`, `report.ts`, `cli.ts` plus vitest suites.
 
-Verify everything: `python scripts/verify.py --e2e` (typecheck, lint, 14 vitest tests, demo export, Playwright + axe).
+Verify everything: `python scripts/verify.py --e2e` (typecheck, lint, vitest suite, demo export, Playwright + axe).
 
 ## Rules
 

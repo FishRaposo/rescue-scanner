@@ -1,0 +1,20 @@
+{
+  "id": "2026-11-19-readme-stale-test-count",
+  "repo": "rescue-scanner",
+  "title": "README states 14 vitest tests; actual suite is 26",
+  "kind": "doc-drift",
+  "found_date": "2026-11-19",
+  "found_by": "review-a-fresh-clone-audit",
+  "symptom": "README quickstart says `python scripts/verify.py --e2e` runs '14 vitest tests'; `npm run unit` on a fresh clone runs 26.",
+  "reproduce": "cd rescue-scanner && npm ci && npm run unit  # Test Files 4 passed, Tests 26 passed; README.md line ~32 says 14",
+  "expected": "README count matches the suite, or the line names no count at all.",
+  "failing_revision": "4553def",
+  "fix_commit": null,
+  "regression_test": "manual: README no longer carries a hard-coded test count",
+  "root_cause": null,
+  "status": "open",
+  "bench_candidate": "no",
+  "bench_note": "one-line doc fix; no behavioural gate",
+  "publishable": true,
+  "notes": "Found during Review A fresh-clone audit. Prefer removing the static count over updating it, per the no-stale-number proof rule."
+}

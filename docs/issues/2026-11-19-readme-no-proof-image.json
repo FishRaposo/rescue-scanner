@@ -1,0 +1,20 @@
+{
+  "id": "2026-11-19-readme-no-proof-image",
+  "repo": "rescue-scanner",
+  "title": "README first screen has no image while the Pages demo is unpublished",
+  "kind": "doc-gap",
+  "found_date": "2026-11-19",
+  "found_by": "review-a-fresh-clone-audit",
+  "symptom": "Portfolio proof requires an image in the README or a live demo; Pages deploy is an owner action not yet done, so the README is the only 'something to look at' surface and carries no image.",
+  "reproduce": "grep -c 'png' README.md  # 0",
+  "expected": "README embeds the cover card (docs/images/portfolio/cover.png, 1000x750) on the first screen.",
+  "failing_revision": "4553def",
+  "fix_commit": null,
+  "regression_test": "manual: README renders the cover image",
+  "root_cause": null,
+  "status": "open",
+  "bench_candidate": "no",
+  "bench_note": "doc fix",
+  "publishable": true,
+  "notes": "Same defect exists in deploy-doctor; registered there separately."
+}
