@@ -43,6 +43,12 @@ Verify everything: `python scripts/verify.py --e2e` (typecheck, lint, vitest sui
 - Heuristics over source text — it can miss real defects and can flag safe code; every rule documents its blind spot in `docs/RULES.md` and on the report's rules page.
 - No auto-fix and no writes by default — it reports; the patch is still yours.
 
+## Part of the stack
+
+[Client Portal](https://github.com/FishRaposo/client-portal) · [Docs Answer](https://github.com/FishRaposo/docs-answer) · [Deploy Doctor](https://github.com/FishRaposo/deploy-doctor) · [Triage Agent](https://github.com/FishRaposo/triage-agent) · [Fix Bench](https://github.com/FishRaposo/fix-bench)
+
+Two flagships and four supporting pieces. Client Portal and Docs Answer carry the deepest work; Deploy Doctor reads the failed build, Rescue Scanner audits the generated app, Triage Agent is the approval-gated workflow, and Fix Bench turns each real defect into a scored task.
+
 ## License
 
 MIT. Portfolio piece by Vinícius Raposo — see `docs/CASE_STUDY.md` for the real defect it found and fixed.
