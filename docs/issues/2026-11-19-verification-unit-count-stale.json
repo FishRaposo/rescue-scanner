@@ -1,0 +1,23 @@
+{
+  "id": "2026-11-19-verification-unit-count-stale",
+  "repo": "rescue-scanner",
+  "title": "Verification record says 14 unit tests; the suite runs 26",
+  "kind": "docs",
+  "found_date": "2026-11-19",
+  "found_by": "agent",
+  "symptom": "docs/verification.md line 14 records 'Unit | npm run unit | PASS (14 tests)'. The command prints 26 passed across 4 files (shared/fixtures 4, shared/api 8, scanner/src/rules 7, scanner/src/cli 7), so the only dated unit count in the repo is 12 short. It also names the scanner half only: 14 = 7 + 7, as if shared/ did not run.",
+  "reproduce": [
+    "cd portfolio/rescue-scanner",
+    "npm run unit"
+  ],
+  "expected": "The verification record states the count the command prints: 26 tests across 4 files.",
+  "failing_revision": "e159df2",
+  "fix_commit": "working tree (uncommitted); docs/verification.md unit row corrected to the measured 26",
+  "regression_test": "manual: re-run npm run unit and compare its printed count with the row",
+  "root_cause": "The row was written when only the scanner's two suites existed; eb91285 added a 7th rule test and the count moved to 26 without the row being re-read. The author counted the scanner suites only, so the shared/fixtures and shared/api suites were never in the number.",
+  "status": "fixed",
+  "bench_candidate": "unknown",
+  "bench_note": "A one-line prose count fix; a hidden test could assert the doc matches the suite's printed count, which is the same shape as the docs-answer da-verification-count-drift task already in Fix Bench.",
+  "publishable": true,
+  "notes": "Found during the 2026-11-19 readiness sweep of all thirteen pieces, after the final audit. Every other unit/test count in the six pieces matched its measured value."
+}

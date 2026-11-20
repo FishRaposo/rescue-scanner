@@ -11,7 +11,7 @@
 | Scanner clean | `node scanner/bin.mjs scan fixtures/clean-app` | 0 findings, exit 0 | 2026-11-19 | PASS |
 | Typecheck | `npm run typecheck` | clean | 2026-11-19 | PASS |
 | Lint | `npm run lint` | 0 errors | 2026-11-19 | PASS (2 vendored warnings) |
-| Unit | `npm run unit` | vitest suites green | 2026-11-19 | PASS (14 tests) |
+| Unit | `npm run unit` | vitest suites green | 2026-11-19 | PASS (26 tests, 4 files) |
 | Report build | `python scripts/build_demo.py` | static export to `site/` | 2026-11-19 | PASS (18 pages) |
 | Cards | `python scripts/cards.py` | 3× 1000×750 PNG | 2026-11-19 | PASS |
 | Verify | `python scripts/verify.py --e2e` | typecheck+lint+unit+build+demo+e2e | 2026-11-19 | PASS |
